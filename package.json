@@ -1,0 +1,14 @@
+{
+  "name": "todo-list-website",
+  "version": "1.0.0",
+  "description": "Dashboard with Greeting, Focus Timer, To-Do List, and Quick Links",
+  "type": "commonjs",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "fast-check": "3.19.0",
+    "vitest": "1.6.0"
+  }
+}

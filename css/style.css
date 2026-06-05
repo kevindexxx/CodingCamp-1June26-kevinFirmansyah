@@ -1,0 +1,636 @@
+/* ============================================================
+   CSS Custom Properties — dark theme (default)
+   ============================================================ */
+:root,
+[data-theme="dark"] {
+  --clr-bg:        #1a1d2e;
+  --clr-surface:   #252840;
+  --clr-border:    #3a3d5c;
+  --clr-text:      #e8eaf6;
+  --clr-muted:     #9fa8c4;
+  --clr-accent:    #7986cb;
+  --clr-accent-h:  #9fa8da;
+  --clr-danger:    #ef9a9a;
+  --clr-success:   #a5d6a7;
+  --clr-focus:     #ffeb3b;
+  --clr-toolbar-bg: #1a1d2e;
+
+  --radius: 10px;
+  --gap:    1.25rem;
+  --pad:    1.5rem;
+  --trans:  0.15s ease;
+}
+
+/* ============================================================
+   Light theme overrides
+   All contrast ratios rechecked for WCAG 2.1 SC 1.4.3:
+     --clr-text (#1a1d3a) on --clr-surface (#ffffff) ≈ 16:1
+     --clr-muted (#4a5278) on --clr-surface (#ffffff) ≈ 7.5:1
+     --clr-accent (#3949ab) on --clr-bg (#f0f2ff)    ≈ 7.2:1
+   ============================================================ */
+[data-theme="light"] {
+  --clr-bg:        #f0f2ff;
+  --clr-surface:   #ffffff;
+  --clr-border:    #c5cae9;
+  --clr-text:      #1a1d3a;
+  --clr-muted:     #4a5278;
+  --clr-accent:    #3949ab;
+  --clr-accent-h:  #283593;
+  --clr-danger:    #c62828;
+  --clr-success:   #2e7d32;
+  --clr-focus:     #e65100;
+  --clr-toolbar-bg: #e8eaf6;
+}
+
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* smooth theme transition */
+  transition: background-color var(--trans), color var(--trans);
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 16px;           /* base ≥ 14 px — Req 10.1 */
+  line-height: 1.6;
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  min-height: 100vh;
+  padding: var(--gap);
+  padding-top: 0;            /* toolbar sits flush at the top */
+}
+
+/* ============================================================
+   Typography hierarchy — Req 10.3
+   h1 ≥ h2 + 4px, h2 ≥ body + 4px
+   ============================================================ */
+h1 { font-size: 1.75rem; font-weight: 700; line-height: 1.2; }  /* 28px */
+h2 { font-size: 1.25rem; font-weight: 600; line-height: 1.3; }  /* 20px */
+h3 { font-size: 1.1rem;  font-weight: 600; }                    /* ~17.6px */
+
+/* ============================================================
+   Layout — four panels, responsive — Req 1.5, 10.4
+   ============================================================ */
+body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-auto-rows: auto;
+  gap: var(--gap);
+  align-items: start;
+}
+
+/* toolbar spans the full width above the grid */
+#toolbar {
+  grid-column: 1 / -1;
+}
+
+/* ============================================================
+   Toolbar (theme toggle lives here)
+   ============================================================ */
+#toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem var(--gap);
+  background: var(--clr-toolbar-bg);
+  border-bottom: 1px solid var(--clr-border);
+  margin: 0 calc(-1 * var(--gap));    /* bleed to body edges */
+  margin-bottom: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background-color var(--trans), border-color var(--trans);
+}
+
+#toolbar-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--clr-accent-h);
+}
+
+#theme-toggle {
+  background: transparent;
+  border: 1px solid var(--clr-border);
+  border-radius: calc(var(--radius) / 2);
+  padding: 0.3rem 0.6rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: border-color var(--trans), background var(--trans);
+}
+
+#theme-toggle:hover {
+  background: var(--clr-border);
+}
+
+/* ============================================================
+   Panel base
+   ============================================================ */
+section {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: var(--pad);
+  overflow: hidden;
+  transition: background-color var(--trans), border-color var(--trans);
+}
+
+/* ============================================================
+   Focus indicators — WCAG 2.1 SC 2.4.7, Req 10.5
+   --clr-focus (#ffeb3b) vs --clr-surface (#252840) = ~12:1
+   ============================================================ */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid var(--clr-focus);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* ============================================================
+   Greeting Panel
+   ============================================================ */
+#greeting-panel {
+  text-align: center;
+}
+
+#greeting-time {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--clr-text);
+  line-height: 1;
+}
+
+#greeting-date {
+  font-size: 0.95rem;
+  color: var(--clr-muted);
+  margin-top: 0.25rem;
+}
+
+/* greeting text + edit pencil button side by side */
+#greeting-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  justify-content: center;
+}
+
+#greeting-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--clr-accent-h);
+}
+
+#greeting-name-edit-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.1rem 0.3rem;
+  border-radius: calc(var(--radius) / 2);
+  color: var(--clr-muted);
+  transition: color var(--trans);
+  line-height: 1;
+}
+
+#greeting-name-edit-btn:hover { color: var(--clr-accent-h); }
+
+/* inline name form */
+#greeting-name-form {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+#greeting-name-input {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.9rem;
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  border: 1px solid var(--clr-accent);
+  border-radius: calc(var(--radius) / 2);
+  width: 160px;
+}
+
+#greeting-name-save-btn,
+#greeting-name-cancel-btn {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  border-radius: calc(var(--radius) / 2);
+  cursor: pointer;
+}
+
+#greeting-name-save-btn   { background: var(--clr-success); color: var(--clr-bg); }
+#greeting-name-cancel-btn { background: var(--clr-border);  color: var(--clr-text); }
+
+/* ============================================================
+   Focus Timer Panel
+   ============================================================ */
+#timer-panel {
+  text-align: center;
+}
+
+#timer-display {
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--clr-text);
+  line-height: 1;
+  margin-bottom: 1.25rem;
+}
+
+.timer-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.timer-controls button {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--clr-accent);
+  color: #fff;
+  border: none;
+  border-radius: calc(var(--radius) / 2);
+  cursor: pointer;
+  transition: background var(--trans), opacity var(--trans);
+}
+
+.timer-controls button:hover:not(:disabled) {
+  background: var(--clr-accent-h);
+}
+
+.timer-controls button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Custom duration row */
+#timer-duration-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+#timer-duration-row label {
+  font-size: 0.85rem;
+  color: var(--clr-muted);
+  white-space: nowrap;
+}
+
+#timer-duration-input {
+  width: 4rem;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  border: 1px solid var(--clr-border);
+  border-radius: calc(var(--radius) / 2);
+}
+
+#timer-duration-set-btn {
+  padding: 0.3rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--clr-border);
+  color: var(--clr-text);
+  border: none;
+  border-radius: calc(var(--radius) / 2);
+  cursor: pointer;
+  transition: background var(--trans);
+}
+
+#timer-duration-set-btn:hover {
+  background: var(--clr-accent);
+  color: #fff;
+}
+
+/* ============================================================
+   To-Do List Panel
+   ============================================================ */
+#todo-panel h2 {
+  margin-bottom: 1rem;
+}
+
+.todo-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.todo-form input[type="text"],
+#todo-input {
+  flex: 1 1 180px;
+  min-width: 0;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.95rem;
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  border: 1px solid var(--clr-border);
+  border-radius: calc(var(--radius) / 2);
+}
+
+.todo-form input[type="text"]::placeholder,
+#todo-input::placeholder {
+  color: var(--clr-muted);
+}
+
+.todo-form button,
+#todo-add-btn {
+  padding: 0.45rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--clr-accent);
+  color: #fff;
+  border: none;
+  border-radius: calc(var(--radius) / 2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--trans);
+}
+
+.todo-form button:hover,
+#todo-add-btn:hover {
+  background: var(--clr-accent-h);
+}
+
+/* Inline error / validation — Req 4.4, 7.4 */
+.todo-error {
+  font-size: 0.85rem;
+  color: var(--clr-danger);
+  min-height: 1.2em;
+  margin-top: 0.35rem;
+}
+
+/* Task list */
+#todo-list {
+  list-style: none;
+  margin-top: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 50vh;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+#todo-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  background: var(--clr-bg);
+  border: 1px solid var(--clr-border);
+  border-radius: calc(var(--radius) / 2);
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+
+/* Completed task — Req 6.2, 10.2 */
+#todo-list li.completed .todo-text {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.todo-toggle {
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--clr-accent);
+  cursor: pointer;
+}
+
+.todo-text {
+  flex: 1 1 0;
+  font-size: 0.95rem;
+  min-width: 0;
+}
+
+.todo-edit-btn,
+.todo-delete-btn {
+  flex-shrink: 0;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8rem;
+  border: 1px solid var(--clr-border);
+  border-radius: calc(var(--radius) / 2);
+  background: transparent;
+  color: var(--clr-muted);
+  cursor: pointer;
+  transition: color var(--trans), border-color var(--trans);
+}
+
+.todo-edit-btn:hover { color: var(--clr-accent-h); border-color: var(--clr-accent-h); }
+.todo-delete-btn:hover { color: var(--clr-danger); border-color: var(--clr-danger); }
+
+/* Edit mode controls */
+.todo-edit-input {
+  flex: 1 1 120px;
+  min-width: 0;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.95rem;
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  border: 1px solid var(--clr-accent);
+  border-radius: calc(var(--radius) / 2);
+}
+
+.todo-confirm-btn,
+.todo-cancel-btn {
+  flex-shrink: 0;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: calc(var(--radius) / 2);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.todo-confirm-btn { background: var(--clr-success); color: #1b2e1c; }
+.todo-cancel-btn  { background: var(--clr-danger);  color: #3e1010; }
+
+.todo-edit-error {
+  width: 100%;
+  font-size: 0.8rem;
+  color: var(--clr-danger);
+}
+
+/* ============================================================
+   Quick Links Panel
+   ============================================================ */
+#links-panel h2 {
+  margin-bottom: 1rem;
+}
+
+.links-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.links-form input {
+  flex: 1 1 120px;
+  min-width: 0;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.9rem;
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  border: 1px solid var(--clr-border);
+  border-radius: calc(var(--radius) / 2);
+}
+
+.links-form input::placeholder {
+  color: var(--clr-muted);
+}
+
+.links-form button,
+#link-add-btn {
+  padding: 0.45rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--clr-accent);
+  color: #fff;
+  border: none;
+  border-radius: calc(var(--radius) / 2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--trans);
+}
+
+.links-form button:hover,
+#link-add-btn:hover {
+  background: var(--clr-accent-h);
+}
+
+/* Inline error */
+.links-error {
+  font-size: 0.85rem;
+  color: var(--clr-danger);
+  min-height: 1.2em;
+  margin-top: 0.35rem;
+}
+
+/* Links grid */
+#links-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.875rem;
+}
+
+.link-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--clr-bg);
+  border: 1px solid var(--clr-border);
+  border-radius: calc(var(--radius) / 2);
+  overflow: hidden;
+}
+
+.link-btn {
+  display: inline-block;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--clr-accent-h);
+  text-decoration: none;
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--trans);
+}
+
+.link-btn:hover {
+  color: var(--clr-text);
+  text-decoration: underline;
+}
+
+.link-delete-btn {
+  padding: 0.4rem 0.5rem;
+  font-size: 0.8rem;
+  background: transparent;
+  color: var(--clr-muted);
+  border: none;
+  cursor: pointer;
+  transition: color var(--trans);
+  line-height: 1;
+}
+
+.link-delete-btn:hover {
+  color: var(--clr-danger);
+}
+
+/* ============================================================
+   Scrollbar styling (non-critical, cosmetic)
+   ============================================================ */
+#todo-list::-webkit-scrollbar { width: 5px; }
+#todo-list::-webkit-scrollbar-track { background: transparent; }
+#todo-list::-webkit-scrollbar-thumb { background: var(--clr-border); border-radius: 999px; }
+
+/* ============================================================
+   Responsive breakpoints — Req 10.4
+   No horizontal overflow from 320 px to 1920 px.
+   ============================================================ */
+@media (max-width: 600px) {
+  body {
+    grid-template-columns: 1fr;
+    padding: 0.75rem;
+    padding-top: 0;
+    gap: 0.75rem;
+  }
+
+  section {
+    padding: 1rem;
+  }
+
+  #toolbar {
+    margin: 0 -0.75rem;
+  }
+
+  #greeting-time {
+    font-size: 2.25rem;
+  }
+
+  #timer-display {
+    font-size: 2.75rem;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  body {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1400px) {
+  body {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1800px;
+    margin-inline: auto;
+  }
+}
